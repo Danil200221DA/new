@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI AMMO SOFT - Signal Grid</title>
+  <style>
+    /* Основные стили */
+    body {
+      background-image: url('https://images.wallpapershq.com/wallpapers/739/wallpaper_739_1640x2360.jpg');
+      font-family: 'Montserrat', sans-serif;        
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-size: cover;
+      background-position: center;
+    }
+    .container {
+      text-align: center;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.7); /* Прозрачный фон */
+      border-radius: 12px;
+      width: 90%; /* Уменьшение ширины для мобильных */
+      max-width: 400px;
+      margin: 10px;
+    }
+    .promo-codes {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin: 20px 0;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 12px;
+    }
+    .cell {
+      width: 100%;
+      padding-top: 100%; /* Соотношение 1:1 для равных клеток */
+      position: relative;
+      background-color: #4CAFEF;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .star {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transform: scale(0);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      background-image: url('https://cdn.icon-icons.com/icons2/153/PNG/256/star_favourite_21830.png');
+      background-size: cover;
+      background-position: center;
+    }
+    .button {
+      background-color: #3D4B61;
+      padding: 10px 20px;
+      border-radius: 8px;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6); /* Тень от кнопки */
+      animation: bounceButton 3s infinite;
+      margin: 10px 0; /* Отступ между кнопками */
+    }
+    .button:hover {
+      transform: scale(1.1); /* Увеличение при наведении */
+      background-color: #28a745; /* Зеленый цвет */
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+    }
+    .star.active {
+      opacity: 1;
+      transform: scale(1.2);
+      animation: bounce 0.3s forwards;
+    }
+    /* Анимация для звезд */
+    @keyframes bounce {
+      0% { transform: scale(0); }
+      70% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    /* Анимация для кнопки */
+    @keyframes bounceButton {
+      0%, 90% { transform: scale(1); }
+      95% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 колонки для планшетов */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 колонки для мобильных телефонов */
+      }
+      .button {
+        padding: 8px; /* Уменьшение отступов на мобильных устройствах */
+        font-size: 14px; /* Уменьшение размера шрифта */
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <div class="grid" id="grid">
+    <!-- 25 клеток будут добавлены через JavaScript -->
+  </div>
+  <button class="button" onclick="revealStars()">Получить сигнал</button>
+  <button class="button" id="backButton">Назад в меню</button>
+</div>
+
+<script>
+  // Нажатие на кнопку "Назад в меню"
+  document.getElementById('backButton').addEventListener('click', () => {
+    window.location.href = 'MENUMIN.html'; // Переход на MENUMIN.html
+  });
+
+  const grid = document.getElementById('grid');
+
+  // Создаем 25 ячеек
+  for (let i = 0; i < 25; i++) {
+    const cell = document.createElement('div');
+    cell.classList.add('cell');
+    grid.appendChild(cell);
+  }
+
+  function revealStars() {
+    // Очистка ячеек
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach(cell => cell.innerHTML = '');
+
+    // Определение количества звезд в зависимости от ширины экрана
+    let starCount = 5; // По умолчанию 5 звезд
+    const screenWidth = window.innerWidth;
+
+    if (screenWidth < 480) {
+      starCount = 3; // Для мобильных устройств
+    } else if (screenWidth < 768) {
+      starCount = 4; // Для планшетов
+    }
+
+    // Генерация уникальных случайных индексов
+    let starPositions = [];
+    while (starPositions.length < starCount) {
+      let randomIndex = Math.floor(Math.random() * 25);
+      if (!starPositions.includes(randomIndex)) {
+        starPositions.push(randomIndex);
+      }
+    }
+
+    // Добавление звездочек с задержкой поочередного появления
+    starPositions.forEach((index, i) => {
+      setTimeout(() => {
+        const star = document.createElement('div');
+        star.classList.add('star', 'active');
+        cells[index].appendChild(star);
+      }, i * 500); // задержка в 500мс между звездами
+    });
+  }
+</script>
+
+</body>
+</html>
